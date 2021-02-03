@@ -37,11 +37,11 @@ export const getUsers = () => (dispatch) => {
         users = response.data.data;
         usersApi
           .get(2)
-          .then((response) => {
-            const merged = users.concat(response.data.data);
+          .then((responsePage2) => {
+            const merged = users.concat(responsePage2.data.data);
             dispatch(getUsersState(merged));
           })
-          .catch((err) => consoleo.error(err));
+          .catch((err) => console.error(err));
       })
       .catch((err) => console.error(err));
   } catch (err) {

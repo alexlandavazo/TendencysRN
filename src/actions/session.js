@@ -17,7 +17,7 @@ export const login = (email) => (dispatch) => {
   try {
     const users = store.getState().users;
     users.map((user) => {
-      if (user.email == email) {
+      if (user.email === email) {
         dispatch(setLoginState(user));
       }
     });
