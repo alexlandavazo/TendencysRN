@@ -1,37 +1,12 @@
-import React, {useState} from 'react';
-import {
-  View,
-  SafeAreaView,
-  Image,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import React from 'react';
+import {View, SafeAreaView, Image, Text, TouchableOpacity} from 'react-native';
 import tailwind from 'tailwind-rn';
-import {connect} from 'react-redux';
-import {removeLoginState} from '../actions/session';
-import {bindActionCreators} from 'redux';
-import Modal from 'react-native-modal';
 
-const Profile = ({removeLoginState, session, users}) => {
-  const user = session.email ? session : users[0];
-  const {avatar, first_name, last_name, email} = user;
-  const [visible, setVisible] = useState(false);
-
-  const signOut = () => {
-    setVisible(true);
-    setTimeout(() => {
-      removeLoginState();
-    }, 2000);
-  };
+const User = ({navigation, route}) => {
+  const {avatar, first_name, last_name, email} = route.params;
 
   return (
     <SafeAreaView style={tailwind('h-full bg-white')}>
-      <Modal isVisible={visible}>
-        <View style={tailwind('flex')}>
-          <ActivityIndicator size={'large'} />
-        </View>
-      </Modal>
       <View style={tailwind('mt-10')}>
         {avatar ? (
           <Image
@@ -57,23 +32,15 @@ const Profile = ({removeLoginState, session, users}) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={signOut}
+          onPress={() => navigation.navigate('Edit User', {user: route.params})}
           style={tailwind(
             'mx-4 py-4 border border-gray-200 rounded-full mt-52',
           )}>
-          <Text style={tailwind('text-gray-400 text-center')}>Sign Out</Text>
+          <Text style={tailwind('text-gray-400 text-center')}>Edit</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
-const mapStateToProps = (state) => ({
-  session: state.session,
-  users: state.users,
-});
-const mapDispatchToProps = (dispatch) => ({
-  removeLoginState: bindActionCreators(removeLoginState, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default User;

@@ -20,6 +20,12 @@ export const editUser = (user) => {
     user: user,
   };
 };
+export const addUser = (user) => {
+  return {
+    type: 'ADD_USER',
+    user: user,
+  };
+};
 
 export const getUsers = () => (dispatch) => {
   const usersApi = new API();
@@ -33,7 +39,6 @@ export const getUsers = () => (dispatch) => {
           .get(2)
           .then((response) => {
             const merged = users.concat(response.data.data);
-            console.log(merged);
             dispatch(getUsersState(merged));
           })
           .catch((err) => consoleo.error(err));

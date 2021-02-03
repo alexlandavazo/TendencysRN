@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   View,
   SafeAreaView,
-  Image,
   TextInput,
   Text,
   TouchableOpacity,
@@ -10,24 +9,22 @@ import {
 import tailwind from 'tailwind-rn';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {editUser} from '../actions/users';
+import {addUser} from '../actions/users';
 
-const EditUser = ({navigation, route, editUser}) => {
-  const user = route.params.user;
-  const [firstName, setFirstName] = useState(user.first_name);
-  const [lastName, setLastName] = useState(user.last_name);
-  const [email, setEmail] = useState(user.email);
+const AddUser = ({navigation, addUser}) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [validationMessage, setValidationMessage] = useState([]);
 
   const saveChanges = () => {
     if (!validationFields()) return;
-    const editedUser = {
-      ...user,
+    const user = {
       first_name: firstName,
       last_name: lastName,
       email: email,
     };
-    editUser(editedUser);
+    addUser(user);
     navigation.navigate('Users');
   };
 
@@ -54,18 +51,10 @@ const EditUser = ({navigation, route, editUser}) => {
     }
     return validation;
   };
+
   return (
     <SafeAreaView style={tailwind('h-full bg-white')}>
       <View style={tailwind('mt-10')}>
-        {user.avatar ? (
-          <Image
-            source={{uri: user.avatar}}
-            style={tailwind('h-32 w-32 rounded-full ml-36')}
-          />
-        ) : (
-          <View
-            style={tailwind('h-32 w-32 rounded-full ml-36 bg-blue-600')}></View>
-        )}
         <View style={tailwind('mx-4 mt-8')}>
           <Text style={tailwind('text-base text-gray-800')}>First Name</Text>
           <TextInput
@@ -91,13 +80,14 @@ const EditUser = ({navigation, route, editUser}) => {
           )}
           <Text style={tailwind('text-base text-gray-800')}>Email</Text>
           <TextInput
+            autoCapitalize={'none'}
             style={tailwind('h-10 border border-gray-100 rounded')}
             value={email}
             onChangeText={setEmail}
           />
           {validationMessage.email && (
             <Text style={tailwind('mx-4 text-red-500')}>
-              {validationMessage.firstName}
+              {validationMessage.email}
             </Text>
           )}
         </View>
@@ -106,9 +96,7 @@ const EditUser = ({navigation, route, editUser}) => {
           style={tailwind(
             'mx-4 py-4 border border-gray-200 rounded-full mt-52',
           )}>
-          <Text style={tailwind('text-gray-400 text-center')}>
-            Save Changes
-          </Text>
+          <Text style={tailwind('text-gray-400 text-center')}>Add User</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -116,7 +104,7 @@ const EditUser = ({navigation, route, editUser}) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  editUser: bindActionCreators(editUser, dispatch),
+  addUser: bindActionCreators(addUser, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(EditUser);
+export default connect(null, mapDispatchToProps)(AddUser);
