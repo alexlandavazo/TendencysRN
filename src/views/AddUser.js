@@ -9,35 +9,52 @@ import {
 import tailwind from 'tailwind-rn';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {addUser} from '../actions/users';
+import {addUser, editUser} from '../actions/users';
 
-const AddUser = ({navigation, addUser}) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+const AddUser = ({navigation, addUserAction, route, editUserAction}) => {
+  const type = route.params.type;
+  const initialState = {
+    firstName: route.params.user ? route.params.user.first_name : '',
+    lastName: route.params.user ? route.params.user.last_name : '',
+    email: route.params.user ? route.params.user.email : '',
+  };
+
+  const [firstName, setFirstName] = useState(initialState.firstName);
+  const [lastName, setLastName] = useState(initialState.lastName);
+  const [email, setEmail] = useState(initialState.email);
   const [validationMessage, setValidationMessage] = useState([]);
 
   const saveChanges = () => {
-    if (!validationFields()) return;
-    const user = {
+    if (!validationFields()) {
+      return;
+    }
+    const newUser = {
       first_name: firstName,
       last_name: lastName,
       email: email,
     };
-    addUser(user);
+    if (type === 'add') {
+      addUserAction(newUser);
+    } else {
+      const editedUser = {
+        ...route.params.user,
+        ...newUser,
+      };
+      editUserAction(editedUser);
+    }
     navigation.navigate('Users');
   };
 
   const validationFields = () => {
     let validation = true;
-    const regEmail = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
-    if (firstName.length == 0) {
+    const regEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (firstName.length === 0) {
       validation = false;
       setValidationMessage({
         firstName: 'The first name field cant be empty',
       });
     }
-    if (lastName.length == 0) {
+    if (lastName.length === 0) {
       validation = false;
       setValidationMessage({
         lastName: 'The last name field cant be empty',
@@ -96,7 +113,9 @@ const AddUser = ({navigation, addUser}) => {
           style={tailwind(
             'mx-4 py-4 border border-gray-200 rounded-full mt-52',
           )}>
-          <Text style={tailwind('text-gray-400 text-center')}>Add User</Text>
+          <Text style={tailwind('text-gray-400 text-center')}>
+            {type === 'add' ? 'Add User' : 'Save Changes'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -104,7 +123,8 @@ const AddUser = ({navigation, addUser}) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  addUser: bindActionCreators(addUser, dispatch),
+  addUserAction: bindActionCreators(addUser, dispatch),
+  editUserAction: bindActionCreators(editUser, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(AddUser);

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -11,7 +11,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {removeUser} from '../actions/users';
 
-const Users = ({navigation, removeUser, users}) => {
+const Users = ({navigation, removeUserAction, users}) => {
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -31,13 +31,15 @@ const Users = ({navigation, removeUser, users}) => {
               </Text>
               <View style={tailwind('justify-end flex flex-row')}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Edit User', {user: item})}
+                  onPress={() =>
+                    navigation.navigate('Add User', {user: item, type: 'edit'})
+                  }
                   style={tailwind(
                     'bg-green-200 px-3 font-light text-base py-1 rounded-lg mr-2',
                   )}>
                   <Text style={tailwind('text-xs text-gray-500')}>Edit</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => removeUser(item.id)}>
+                <TouchableOpacity onPress={() => removeUserAction(item.id)}>
                   <Text style={tailwind('text-xs text-gray-500 mr-2 mt-1')}>
                     Delete
                   </Text>
@@ -53,7 +55,7 @@ const Users = ({navigation, removeUser, users}) => {
   return (
     <SafeAreaView style={tailwind('h-full bg-white')}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Add User')}
+        onPress={() => navigation.navigate('Add User', {type: 'add'})}
         style={tailwind('py-4 rounded-full mx-4 bg-blue-400 mt-4')}>
         <Text style={tailwind('text-center font-semibold text-white')}>
           Add User
@@ -72,7 +74,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  removeUser: bindActionCreators(removeUser, dispatch),
+  removeUserAction: bindActionCreators(removeUser, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

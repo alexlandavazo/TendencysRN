@@ -7,21 +7,24 @@ import {ActivityIndicator} from 'react-native';
 import tailwind from 'tailwind-rn';
 import Login from './views/Login';
 
-const Routes = ({getUsers, session}) => {
+const Routes = ({getUsersAction, session}) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getUsers();
+    getUsersAction();
     setLoading(false);
-  }, []);
-  if (loading) {
-    return <ActivityIndicator size={'large'} style={tailwind('mt-64')} />;
-  }
-  return session ? <HomeTab /> : <Login />;
+  }, [getUsersAction]);
+  return loading ? (
+    <ActivityIndicator size={'large'} style={tailwind('mt-64')} />
+  ) : session ? (
+    <HomeTab />
+  ) : (
+    <Login />
+  );
 };
 const mapStateToProps = (state) => ({
   session: state.session,
 });
 const mapDispatchToProps = (dispatch) => ({
-  getUsers: bindActionCreators(getUsers, dispatch),
+  getUsersAction: bindActionCreators(getUsers, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Routes);

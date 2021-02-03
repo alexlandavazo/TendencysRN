@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {login} from '../actions/session';
 
-const Login = ({login}) => {
+const Login = ({loginAction}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -29,11 +29,12 @@ const Login = ({login}) => {
           secureTextEntry={true}
           style={tailwind('h-10 rounded border border-gray-200')}
           onChangeText={setPassword}
+          value={password}
         />
       </View>
       <TouchableOpacity
         onPress={() => {
-          login(email);
+          loginAction(email);
         }}
         style={tailwind('mx-8 py-4 border border-gray-200 rounded-full mt-24')}>
         <Text style={tailwind('text-gray-400 text-center')}>Login</Text>
@@ -43,6 +44,6 @@ const Login = ({login}) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  login: bindActionCreators(login, dispatch),
+  loginAction: bindActionCreators(login, dispatch),
 });
 export default connect(null, mapDispatchToProps)(Login);

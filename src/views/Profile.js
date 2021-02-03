@@ -13,7 +13,7 @@ import {removeLoginState} from '../actions/session';
 import {bindActionCreators} from 'redux';
 import Modal from 'react-native-modal';
 
-const Profile = ({removeLoginState, session, users}) => {
+const Profile = ({removeLoginStateAction, session, users}) => {
   const user = session.email ? session : users[0];
   const {avatar, first_name, last_name, email} = user;
   const [visible, setVisible] = useState(false);
@@ -21,7 +21,7 @@ const Profile = ({removeLoginState, session, users}) => {
   const signOut = () => {
     setVisible(true);
     setTimeout(() => {
-      removeLoginState();
+      removeLoginStateAction();
     }, 2000);
   };
 
@@ -39,8 +39,7 @@ const Profile = ({removeLoginState, session, users}) => {
             style={tailwind('h-32 w-32 rounded-full ml-36')}
           />
         ) : (
-          <View
-            style={tailwind('h-32 w-32 rounded-full ml-36 bg-blue-600')}></View>
+          <View style={tailwind('h-32 w-32 rounded-full ml-36 bg-blue-600')} />
         )}
         <View style={tailwind('mx-4 mt-8')}>
           <Text style={tailwind('text-base text-gray-800')}>First Name</Text>
@@ -73,7 +72,7 @@ const mapStateToProps = (state) => ({
   users: state.users,
 });
 const mapDispatchToProps = (dispatch) => ({
-  removeLoginState: bindActionCreators(removeLoginState, dispatch),
+  removeLoginStateAction: bindActionCreators(removeLoginState, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

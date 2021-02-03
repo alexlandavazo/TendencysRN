@@ -14,8 +14,7 @@ const User = ({navigation, route}) => {
             style={tailwind('h-32 w-32 rounded-full ml-36')}
           />
         ) : (
-          <View
-            style={tailwind('h-32 w-32 rounded-full ml-36 bg-blue-600')}></View>
+          <View style={tailwind('h-32 w-32 rounded-full ml-36 bg-blue-600')} />
         )}
         <View style={tailwind('mx-4 mt-8')}>
           <Text style={tailwind('text-base text-gray-800')}>First Name</Text>
@@ -32,7 +31,9 @@ const User = ({navigation, route}) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Edit User', {user: route.params})}
+          onPress={() =>
+            navigation.navigate('Add User', {user: route.params, type: 'edit'})
+          }
           style={tailwind(
             'mx-4 py-4 border border-gray-200 rounded-full mt-52',
           )}>

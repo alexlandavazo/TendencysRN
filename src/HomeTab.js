@@ -19,7 +19,6 @@ const HomeTab = () => {
             } else if (route.name === 'Profile') {
               iconName = 'person';
             }
-            // You can return any component that you like here!
             return (
               <Icon
                 name={iconName}
