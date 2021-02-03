@@ -24,11 +24,19 @@ export const editUser = (user) => {
 export const getUsers = () => (dispatch) => {
   const usersApi = new API();
   try {
+    let users = [];
     usersApi
-      .get()
+      .get(1)
       .then((response) => {
-        const users = response.data.data;
-        dispatch(getUsersState(users));
+        users = response.data.data;
+        usersApi
+          .get(2)
+          .then((response) => {
+            const merged = users.concat(response.data.data);
+            console.log(merged);
+            dispatch(getUsersState(merged));
+          })
+          .catch((err) => consoleo.error(err));
       })
       .catch((err) => console.error(err));
   } catch (err) {
